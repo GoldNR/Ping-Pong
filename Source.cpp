@@ -1,33 +1,31 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <iostream>
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(0,0), "Ping Pong", sf::Style::Fullscreen);
     window.setMouseCursorVisible(false);
 
+    const unsigned int width = sf::VideoMode::getDesktopMode().width;
+    const unsigned int height = sf::VideoMode::getDesktopMode().height;
+
     sf::CircleShape ball(10.0f);
-    sf::RectangleShape player1 (sf::Vector2f(137.0f, 10.0f));
-    sf::RectangleShape player2 (sf::Vector2f(137.0f, 10.0f));
-
-    sf::SoundBuffer buffer1;
-    sf::SoundBuffer buffer2;
-    sf::SoundBuffer buffer3;
-
-    sf::Sound soundPaddle;
-    sf::Sound soundWall;
-    sf::Sound soundScore;
-
+    sf::RectangleShape player1(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 10, 10.0f)), player2(sf::Vector2f(sf::VideoMode::getDesktopMode().width / 10, 10.0f));
+    sf::SoundBuffer buffer1, buffer2, buffer3;
+    sf::Sound soundPaddle, soundWall, soundScore;
     sf::Font font;
-    sf::Text scorePlayer1;
-    sf::Text scorePlayer2;
-
+    sf::Text showP1Score, showP2Score;
     sf::Clock clock;
 
-    buffer1.loadFromFile("sound_paddle.wav");
-    buffer2.loadFromFile("sound_wall.wav");
-    buffer3.loadFromFile("sound_score.wav");
-
+    try {
+        buffer1.loadFromFile("sound_paddle.wav");
+        buffer2.loadFromFile("sound_wall.wav");
+        buffer3.loadFromFile("sound_score.wav");
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+    
     soundPaddle.setBuffer(buffer1);
     soundWall.setBuffer(buffer2);
     soundScore.setBuffer(buffer3);
@@ -36,30 +34,30 @@ int main()
     player1.setFillColor(sf::Color::White);
     player2.setFillColor(sf::Color::White);
 
-    ball.setPosition(678, 379);
-    player1.setPosition(620, 758);
-    player2.setPosition(620, 0);
+    ball.setPosition((width / 2) - 10, (height / 2) - 10);
+    player1.setPosition((width / 2) - (player1.getGlobalBounds().width / 2), height - 10);
+    player2.setPosition((width / 2) - (player1.getGlobalBounds().width / 2), 0);
 
     font.loadFromFile("Emulogic-zrEw.ttf");
-    scorePlayer1.setFont(font);
-    scorePlayer2.setFont(font);
-    scorePlayer1.setCharacterSize(24);
-    scorePlayer2.setCharacterSize(24);
-    scorePlayer1.setFillColor(sf::Color::White);
-    scorePlayer2.setFillColor(sf::Color::White);
-    scorePlayer1.setPosition(100, 512);
-    scorePlayer2.setPosition(100, 256);
+    showP1Score.setFont(font);
+    showP2Score.setFont(font);
+    showP1Score.setCharacterSize(24);
+    showP2Score.setCharacterSize(24);
+    showP1Score.setFillColor(sf::Color::White);
+    showP2Score.setFillColor(sf::Color::White);
+    showP1Score.setPosition(100, 512);
+    showP2Score.setPosition(100, 256);
 
     float ballVelocityX = 10.0f, ballVelocityY = 10.0f;
 
-    int player1score = 0, player2score = 0;
+    int player1Score = 0, player2Score = 0;
 
     while (window.isOpen())
     {
         // Score system setup
-        std::string p1score = std::to_string(player1score), p2score = std::to_string(player2score);
-        scorePlayer1.setString(p1score);
-        scorePlayer2.setString(p2score);
+        std::string P1ScoreTS = std::to_string(player1Score), P2ScoreTS = std::to_string(player2Score);
+        showP1Score.setString(P1ScoreTS);
+        showP2Score.setString(P2ScoreTS);
 
         // Time delay before ball moves
         sf::Time time = clock.getElapsedTime();
@@ -70,19 +68,19 @@ int main()
         float ballX = ball.getPosition().x, ballY = ball.getPosition().y;
 
         // if ball hits wall
-        if (ballX >= 1341 || ballX <= 0) {
+        if (ballX >= width - 20 || ballX <= 0) {
             ballVelocityX = -ballVelocityX;
             soundWall.play();
         }
 
         // if ball goes out of bounds
-        if (ballY >= 778.0f || ballY <= -20.0f) {
-            ball.setPosition(678, 379);
+        if (ballY >= height + 10 || ballY <= -20) {
+            ball.setPosition((width / 2) - 10, (height / 2) - 10);
             ballVelocityY = -ballVelocityY;
             soundScore.play();
             clock.restart();
-            if (ballY <= -20.0f) { player1score++; }
-            else if (ballY >= 778.0f) { player2score++; }
+            if (ballY <= -20.0f) { player1Score++; }
+            else if (ballY >= height + 10) { player2Score++; }
         }
 
         // Player controls
@@ -116,8 +114,8 @@ int main()
         window.draw(ball);
         window.draw(player1);
         window.draw(player2);
-        window.draw(scorePlayer1);
-        window.draw(scorePlayer2);
+        window.draw(showP1Score);
+        window.draw(showP2Score);
         window.display();
         window.setFramerateLimit(60);
     }
