@@ -48,7 +48,7 @@ int main()
     showP1Score.setPosition(100, 512);
     showP2Score.setPosition(100, 256);
 
-    float ballVelocityX = 1.0f, ballVelocityY = 1.0f;
+    float ballVelocityX = 10.0f, ballVelocityY = 10.0f;
 
     int player1Score = 0, player2Score = 0;
 
