@@ -80,7 +80,7 @@ int main()
             soundScore.play();
             clock.restart();
             if (ballY <= -20.0f) { player1Score++; }
-            else if (ballY >= height + 10) { player2Score++; }
+            else if (ballY >= height) { player2Score++; }
         }
 
         // Player controls
