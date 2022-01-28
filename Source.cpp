@@ -48,7 +48,7 @@ int main()
     showP1Score.setPosition(100, 512);
     showP2Score.setPosition(100, 256);
 
-    float ballVelocityX = 10.0f, ballVelocityY = 10.0f;
+    float ballVelocityX = 1.0f, ballVelocityY = 1.0f;
 
     int player1Score = 0, player2Score = 0;
 
@@ -74,7 +74,7 @@ int main()
         }
 
         // if ball goes out of bounds
-        if (ballY >= height + 10 || ballY <= -20) {
+        if (ballY >= height || ballY <= -20) {
             ball.setPosition((width / 2) - 10, (height / 2) - 10);
             ballVelocityY = -ballVelocityY;
             soundScore.play();
