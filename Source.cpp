@@ -4,7 +4,7 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(0,0), "Ping Pong", sf::Style::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode(0, 0), "Ping Pong", sf::Style::Fullscreen);
     window.setMouseCursorVisible(false);
 
     const unsigned int &width = sf::VideoMode::getDesktopMode().width;

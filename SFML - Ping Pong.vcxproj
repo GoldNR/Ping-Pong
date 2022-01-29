@@ -24,6 +24,7 @@
     <ProjectGuid>{d007c7fc-61c6-4278-a24e-c1bf905ef891}</ProjectGuid>
     <RootNamespace>SFMLPingPong</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Ping Pong</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
