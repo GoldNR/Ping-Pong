@@ -2,13 +2,24 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 
+void windowOperations(sf::RenderWindow& window, sf::CircleShape& ball, sf::RectangleShape& p1, sf::RectangleShape& p2, sf::Text& p1Score, sf::Text& p2Score) {
+    window.clear();
+    window.draw(ball);
+    window.draw(p1);
+    window.draw(p2);
+    window.draw(p1Score);
+    window.draw(p2Score);
+    window.display();
+}
+
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(0, 0), "Ping Pong", sf::Style::Fullscreen);
-    window.setMouseCursorVisible(false);
+    const int& width = sf::VideoMode::getDesktopMode().width;
+    const int& height = sf::VideoMode::getDesktopMode().height;
 
-    const unsigned int &width = sf::VideoMode::getDesktopMode().width;
-    const unsigned int &height = sf::VideoMode::getDesktopMode().height;
+    sf::RenderWindow window(sf::VideoMode(width, height), "Ping Pong", sf::Style::Fullscreen);
+    window.setFramerateLimit(60);
+    window.setMouseCursorVisible(false);
 
     sf::CircleShape ball(10.0f);
     sf::RectangleShape player1(sf::Vector2f(width / 10, 10.0f)), player2(sf::Vector2f(width / 10, 10.0f)); // Paddle width is 1/10th of user's monitor size
@@ -22,10 +33,11 @@ int main()
         buffer1.loadFromFile("sound_paddle.wav");
         buffer2.loadFromFile("sound_wall.wav");
         buffer3.loadFromFile("sound_score.wav");
-    } catch (const std::exception &e) {
+    }
+    catch (const std::exception& e) {
         std::cerr << e.what() << std::endl; // Writes about the error on the console, if any
     }
-    
+
     soundPaddle.setBuffer(buffer1);
     soundWall.setBuffer(buffer2);
     soundScore.setBuffer(buffer3);
@@ -38,7 +50,7 @@ int main()
     player1.setPosition((width / 2) - (player1.getGlobalBounds().width / 2), height - 10);
     player2.setPosition((width / 2) - (player1.getGlobalBounds().width / 2), 0);
 
-    font.loadFromFile("Emulogic-zrEw.ttf");
+    font.loadFromFile("Emulogic.ttf");
     showP1Score.setFont(font);
     showP2Score.setFont(font);
     showP1Score.setCharacterSize(24);
@@ -50,14 +62,14 @@ int main()
 
     float ballVelocityX = 10.0f, ballVelocityY = 10.0f;
 
-    int P1Score = 0, P2Score = 0;
+    int P1ScoreInt = 0, P2ScoreInt = 0;
 
     while (window.isOpen())
     {
         // Score system setup
-        std::string P1ScoreTS = std::to_string(P1Score), P2ScoreTS = std::to_string(P2Score);
-        showP1Score.setString(P1ScoreTS);
-        showP2Score.setString(P2ScoreTS);
+        std::string P1ScoreString = std::to_string(P1ScoreInt), P2ScoreString = std::to_string(P2ScoreInt);
+        showP1Score.setString(P1ScoreString);
+        showP2Score.setString(P2ScoreString);
 
         // Time delay before ball moves
         sf::Time ballTime = ballClock.getElapsedTime();
@@ -79,8 +91,10 @@ int main()
             ballVelocityY = -ballVelocityY;
             soundScore.play();
             ballClock.restart();
-            if (ballY <= -20.0f) { P1Score++; }
-            else if (ballY >= height) { P2Score++; }
+            if (ballY <= -20.0f)
+                P1ScoreInt++;
+            else if (ballY >= height)
+                P2ScoreInt++;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
@@ -114,14 +128,7 @@ int main()
             }
         }
 
-        window.clear();
-        window.draw(ball);
-        window.draw(player1);
-        window.draw(player2);
-        window.draw(showP1Score);
-        window.draw(showP2Score);
-        window.display();
-        window.setFramerateLimit(60);
+        windowOperations(window, ball, player1, player2, showP1Score, showP2Score);
     }
 
     return 0;
